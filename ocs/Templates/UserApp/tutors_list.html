@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Tutors</title>
+    {% load static %}
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'image/ocs7.jpg' %}");
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .back-button {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+        .list-item {
+            margin: 20px 0;
+            font-size: 1.2rem;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .availability {
+            font-size: 1rem;
+            color: #888;
+        }
+        .book-button {
+            margin-top: 10px;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .book-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Available Tutors</h1>
+        </div>
+
+        <div id="modal-body"></div>
+
+        <a href="javascript:void(0);" onclick="goBack()" class="back-button">Back to Home</a>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        function bookTutor(tutorName) {
+            alert(`You have successfully booked ${tutorName}.`);
+        }
+
+        function loadTutors() {
+            const tutors = JSON.parse(localStorage.getItem('tutors')) || [];
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = '';
+
+            tutors.forEach((tutor) => {
+                const newItem = document.createElement('div');
+                newItem.className = 'list-item';
+                newItem.innerHTML = `
+                    ${tutor.name} - ${tutor.subject}
+                    <div class="availability">(Available: ${tutor.timings})</div>
+                    <a href="javascript:void(0);" class="book-button" onclick="bookTutor('${tutor.name}')">Book Now</a>
+                `;
+                modalBody.appendChild(newItem);
+            });
+        }
+
+        window.onload = function() {
+            loadTutors();
+        };
+    </script>
+
+</body>
+</html>

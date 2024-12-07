@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Publisher Home Page</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f0f4f8;
+            --card-background: #ffffff;
+            --text-color: #2c3e50;
+            --delete-color: #e74c3c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .boxes {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .box {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 48%;
+            transition: transform 0.3s ease;
+        }
+
+        .box:hover {
+            transform: translateY(-5px);
+        }
+
+        .box h2 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .box ul {
+            list-style-type: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .box ul.show {
+            max-height: 1000px; /* Increased to accommodate more details */
+        }
+
+        .box ul li {
+            display: flex;
+            flex-direction: column; /* Changed to column to accommodate more details */
+            justify-content: space-between;
+            align-items: flex-start;
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .box ul li span {
+            margin-bottom: 5px;
+        }
+
+        .box ul li a {
+            align-self: flex-end; /* Align delete button to the right */
+            color: var(--delete-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .box ul li a:hover {
+            color: #c0392b;
+        }
+
+        .show-button {
+            display: block;
+            width: 100%;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .show-button:hover {
+            background-color: #2980b9;
+        }
+
+        .form-container {
+            margin-top: 20px;
+            background-color: #f1f5f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .form-container h3 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-container form p {
+            margin-bottom: 10px;
+        }
+
+        .form-container form input,
+        .form-container form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .form-container form button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-container form button:hover {
+            background-color: #27ae60;
+        }
+
+        @media (max-width: 768px) {
+            .boxes {
+                flex-direction: column;
+            }
+
+            .box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>User Publisher Home Page</h1>
+    <div class="boxes">
+        <!-- Doctors Box -->
+        <div class="box">
+            <h2>Doctors</h2>
+            <ul id="doctor-list">
+                {% for doctor in doctors %}
+                    <li>
+                        <span><strong>Name:</strong> {{ doctor.name }}</span>
+                        <span><strong>Specialization:</strong> {{ doctor.specialization }}</span>
+                        <span><strong>Email:</strong> {{ doctor.email }}</span>
+                        <span><strong>Timing:</strong> {{ doctor.timing }}</span>
+                        <a href="{% url 'PublisherApp:delete_doctor' doctor.id %}">Delete</a>
+                    </li>
+                {% empty %}
+                    <li>No doctors available.</li>
+                {% endfor %}
+            </ul>
+
+            <button class="show-button" onclick="toggleDoctorList()">Show List</button>
+
+            <div class="form-container">
+                <h3>Add a Doctor</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ doctor_form.as_p }}
+                    <button type="submit" name="add_doctor">Add Doctor</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tutors Box -->
+        <div class="box">
+            <h2>Tutors</h2>
+            <ul id="tutor-list">
+                {% for tutor in tutors %}
+                    <li>
+                        <span><strong>Name:</strong> {{ tutor.name }}</span>
+                        <span><strong>Subject:</strong> {{ tutor.subject }}</span>
+                        <span><strong>Email:</strong> {{ tutor.email }}</span>
+                        <span><strong>Timing:</strong> {{ tutor.timing }}</span>
+                        <a href="{% url 'PublisherApp:delete_tutor' tutor.id %}">Delete</a>
+                    </li>
+                {% empty %}
+                    <li>No tutors available.</li>
+                {% endfor %}
+            </ul>
+
+            <button class="show-button" onclick="toggleTutorList()">Show List</button>
+
+            <div class="form-container">
+                <h3>Add a Tutor</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ tutor_form.as_p }}
+                    <button type="submit" name="add_tutor">Add Tutor</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDoctorList() {
+        const doctorList = document.getElementById('doctor-list');
+        doctorList.classList.toggle('show');
+    }
+
+    function toggleTutorList() {
+        const tutorList = document.getElementById('tutor-list');
+        tutorList.classList.toggle('show');
+    }
+</script>
+</body>
+</html>

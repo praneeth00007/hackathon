@@ -1,0 +1,32 @@
+{% extends 'Navbar/ProjectNavBar.html' %}
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Consultancy Platform</title>
+    <link rel="stylesheet" href="{% static 'css/chatbot.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+{% block body %}
+    <center>
+        <font size="100px">Welcome to Online Consultancy Platform!</font>
+    </center>
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+          <div class="carousel-item active">
+              <img src="{% static 'image/ocs1.png' %}" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+              <img src="{% static 'image/ocs2.jpg' %}" class="d-block w-100" alt="...">
+          </div>
+      </div>
+    </div>
+
+    <!-- Chatbot Integration Script -->
+    <script id="messenger-widget-b" src="https://cdn.botpenguin.com/website-bot.js" defer>675432703f41ec178c95f3e7,675432565d47394b6ef831bc</script>
+
+{% endblock %}
+</body>
+</html>

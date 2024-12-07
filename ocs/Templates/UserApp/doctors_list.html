@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            background-color: #3498db;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .registration-section {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .registration-section:hover {
+            transform: scale(1.02);
+        }
+
+        .registration-section h2 {
+            color: #2980b9;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 2px solid #3498db;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #27ae60;
+        }
+
+        .profile-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .profile-button a {
+            text-decoration: none;
+        }
+
+        .profile-button button {
+            background-color: #9b59b6;
+        }
+
+        .profile-button button:hover {
+            background-color: #8e44ad;
+        }
+
+        .success-message {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to User Dashboard</h1>
+
+    <!-- Doctor Registration Section -->
+    <div class="registration-section">
+        <h2>Register for a Doctor</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="doctor">Choose a Doctor:</label>
+            <select name="doctor" id="doctor" required>
+                <option value="">Select a Doctor</option>
+                {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.name }} - {{ doctor.specialization }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="payment">Choose a Payment Method:</label>
+            <select name="payment" id="payment" required>
+                <option value="">Select a Payment Method</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
+                <option value="upi">UPI</option>
+                <option value="net_banking">Net Banking</option>
+                <option value="wallet">Wallet</option>
+            </select>
+
+            <button type="submit" name="register_doctor">Register</button>
+        </form>
+    </div>
+
+    <!-- Tutor Registration Section -->
+    <div class="registration-section">
+        <h2>Register for a Tutor</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label for="tutor">Choose a Tutor:</label>
+            <select name="tutor" id="tutor" required>
+                <option value="">Select a Tutor</option>
+                {% for tutor in tutors %}
+                    <option value="{{ tutor.id }}">{{ tutor.name }} - {{ tutor.subject }}</option>
+                {% endfor %}
+            </select>
+
+            <label for="payment">Choose a Payment Method:</label>
+            <select name="payment" id="payment" required>
+                <option value="">Select a Payment Method</option>
+                <option value="credit_card">Credit Card</option>
+                <option value="debit_card">Debit Card</option>
+                <option value="upi">UPI</option>
+                <option value="net_banking">Net Banking</option>
+                <option value="wallet">Wallet</option>
+            </select>
+
+            <button type="submit" name="register_tutor">Register</button>
+        </form>
+    </div>
+
+    <!-- Profile Button -->
+    <div class="profile-button">
+        <a href="{% url 'UserApp:profile' %}">
+            <button>Go to Profile</button>
+        </a>
+    </div>
+
+    <!-- Success message (optional) -->
+    {% if success_message %}
+        <div class="success-message">
+            <p>{{ success_message }}</p>
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .profile-section {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .profile-section h2 {
+            color: #2980b9;
+            margin-top: 0;
+        }
+
+        .profile-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .available-list {
+            background-color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .available-list h3 {
+            color: #34495e;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        ul li:hover {
+            transform: translateX(10px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .back-button {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-button a {
+            text-decoration: none;
+        }
+
+        .no-registration {
+            color: #7f8c8d;
+            font-style: italic;
+            text-align: center;
+        }
+
+        .payment-status {
+            color: #27ae60;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .payment-status.failed {
+            color: #e74c3c;
+        }
+
+        .payment-update {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+        }
+
+        .payment-update input,
+        .payment-update button {
+            margin-top: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Profile</h1>
+
+        <!-- Display Username -->
+        <div class="profile-section">
+            <h2>Account Information</h2>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+        </div>
+
+        <!-- Display Registered Doctor -->
+        <div class="profile-section">
+            <div class="profile-info">
+                <h2>Registered Doctor</h2>
+                {% if doctor %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" name="cancel_doctor">Cancel Registration</button>
+                    </form>
+                {% endif %}
+            </div>
+            {% if doctor %}
+                <p>Name: {{ doctor.name }}</p>
+                <p>Specialization: {{ doctor.specialization }}</p>
+            {% else %}
+                <p class="no-registration">You have not registered for a Doctor yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Display Available Doctors -->
+        <div class="available-list">
+            <h3>Available Doctors</h3>
+            <ul>
+                {% for doc in doctors %}
+                    <li>{{ doc.name }} - {{ doc.specialization }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Display Registered Tutor -->
+        <div class="profile-section">
+            <div class="profile-info">
+                <h2>Registered Tutor</h2>
+                {% if tutor %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button type="submit" name="cancel_tutor">Cancel Registration</button>
+                    </form>
+                {% endif %}
+            </div>
+            {% if tutor %}
+                <p>Name: {{ tutor.name }}</p>
+                <p>Subject: {{ tutor.subject }}</p>
+            {% else %}
+                <p class="no-registration">You have not registered for a Tutor yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Display Available Tutors -->
+        <div class="available-list">
+            <h3>Available Tutors</h3>
+            <ul>
+                {% for t in tutors %}
+                    <li>{{ t.name }} - {{ t.subject }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Display Payment Status -->
+        <div class="payment-status {% if not payment_status or not payment_status.is_paid %}failed{% endif %}">
+            {% if payment_status %}
+                {% if payment_status.is_paid %}
+                    <p>Your payment status: <strong>Paid</strong></p>
+                {% else %}
+                    <p>Your payment status: <strong>Pending</strong></p>
+                    <!-- Payment Update Form -->
+                    <div class="payment-update">
+                        <h3>Update Payment Status</h3>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="upi_transaction_id" placeholder="Enter UPI Transaction ID" required>
+                            <input type="file" name="payment_screenshot" accept="image/*" required>
+                            <button type="submit" name="update_payment_status">Update Payment</button>
+                        </form>
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Your payment status: <strong>Not available</strong></p>
+            {% endif %}
+        </div>
+
+        <!-- Back to User Dashboard Button -->
+        <div class="back-button">
+            <a href="{% url 'UserApp:user_home' %}">
+                <button>Back to Dashboard</button>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

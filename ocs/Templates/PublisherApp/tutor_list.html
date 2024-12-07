@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutors List</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            background-color: rgba(0,0,0,0.6);
+            padding: 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        li {
+            background-color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        li span {
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        a {
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        a.delete {
+            background-color: #e74c3c;
+            color: white;
+            font-weight: bold;
+        }
+
+        a.delete:hover {
+            background-color: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .back-link {
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+        }
+
+        .back-link a:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 600px) {
+            li {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            li a {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Tutors List</h1>
+    <ul>
+        {% for tutor in tutors %}
+            <li>
+                <span>{{ tutor.name }} - {{ tutor.subject }}</span>
+                <a href="{% url 'PublisherApp:delete_tutor' tutor.id %}" class="delete">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <div class="back-link">
+        <a href="{% url 'PublisherApp:home' %}">Back to Home</a>
+    </div>
+</body>
+</html>
